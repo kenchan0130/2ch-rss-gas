@@ -1,0 +1,19 @@
+import { inject } from 'tsyringe';
+
+import { Find2chGasServiceResponseAdapter } from './find2chGasServiceResponseAdapter';
+import { Find2chService } from './find2chService';
+import { GetThreadListRequest } from './getThreadListRequest';
+import { GetThreadListResponse } from './getThreadListResponse';
+
+export class Find2chGasService implements Find2chService {
+  constructor(
+    @inject('Find2chGasServiceResponseAdapter')
+    private responseAdapter: Find2chGasServiceResponseAdapter,
+  ) {}
+
+  getThreadList(request: GetThreadListRequest): GetThreadListResponse {
+    const httpResponse = UrlFetchApp.fetch(request.url().toString());
+    const rawResponse = httpResponse.getContentText('UTF-8');
+    return this.responseAdapter.adapt(rawResponse);
+  }
+}
