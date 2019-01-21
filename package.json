@@ -8,7 +8,7 @@
         "lint": "tslint -c tslint.json 'src/**/*.ts'",
         "push": "cp appsscript.json dist/. && clasp push",
         "dev": "watch 'yarn run lint && yarn run build' ./src",
-        "build": "webpack"
+        "build": "rm -rf dist/* && webpack && sed -i -e '$d' dist/Code.js && rm -r dist/Code.js-e"
     },
     "devDependencies": {
         "@babel/core": "^7.2.2",
@@ -20,6 +20,7 @@
         "@types/google-apps-script": "^0.0.35",
         "@types/node": "^10.12.18",
         "babel-loader": "^8.0.5",
+        "babel-preset-gas": "^2.0.4",
         "cheerio": "^1.0.0-rc.2",
         "clone": "^2.1.2",
         "crypto-js": "^3.1.9-1",
