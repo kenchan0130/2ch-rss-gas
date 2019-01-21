@@ -1,5 +1,4 @@
 import * as cheerio from 'cheerio';
-import { injectable } from 'tsyringe';
 
 import { Find2chSearchThreadBoardName } from '../domain/find2chSearchThreadBoardName';
 import { Find2chSearchThreadBoardServerType } from '../domain/find2chSearchThreadBoardServerType';
@@ -12,7 +11,6 @@ import { Find2chSearchThreadUrl } from '../domain/find2chSearchThreadUrl';
 import { Find2chSearchResult } from './find2chSearchResult';
 import { GetThreadListResponse } from './getThreadListResponse';
 
-@injectable()
 export class Find2chGasServiceResponseAdapter {
   adapt(value: string): GetThreadListResponse {
     const resultList = this.parseHtml(value);
@@ -38,7 +36,7 @@ export class Find2chGasServiceResponseAdapter {
       const additionalThreadInfoDom = cheerio.load(threadResultDom[evenValue + 1]).root();
 
       const boardName = threadHeadlineDom.closest('font').find('a').text().trim();
-      const boardUrl = new URL(threadHeadlineDom.closest('font').find('a').attr('href'));
+      const boardUrl = threadHeadlineDom.closest('font').find('a').attr('href');
 
       const serverTypeMatch = threadHeadlineDom.closest('font').remove('a')
         .text().trim().match(/@(.+)/);
@@ -50,7 +48,7 @@ export class Find2chGasServiceResponseAdapter {
       };
 
       const threadTitle = threadHeadlineDom.closest('a').text().trim();
-      const threadUrl = new URL(threadHeadlineDom.closest('a').attr('href'));
+      const threadUrl = threadHeadlineDom.closest('a').attr('href');
       const postCountMatch = threadHeadlineDom.remove('font').remove('a')
         .text().trim().match(/\(([0-9]+)\)/);
       const postCount = () => {

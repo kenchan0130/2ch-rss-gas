@@ -1,3 +1,5 @@
+import * as queryString from 'querystring';
+
 import { Find2chSearchWord } from '../domain/find2chSearchWord';
 import { Find2chSearchScendType } from './find2chSearchScendType';
 import { Find2chSearchSortType } from './find2chSearchSortType';
@@ -10,6 +12,7 @@ export class Find2chSearchUrlFactory {
   private sortType: Find2chSearchSortType;
   private contentType: Find2chSearchTargetContentType;
   private bbsType: Find2chSearchTargetBbsType;
+  private baseUrl = 'http://find.2ch.sc/index.php';
 
   private scendTypeUrlParamMap: ReadonlyMap<Find2chSearchScendType, string> = new Map([
     [Find2chSearchScendType.Included, 'D'],
@@ -46,48 +49,42 @@ export class Find2chSearchUrlFactory {
   }
 
   generate(): Find2chSearchUrl {
-    const url = this.baseUrl();
     const params = this.urlSearchParams();
-
-    url.search = params.toString();
+    const url = `${this.baseUrl}?${queryString.stringify(params)}`;
 
     return new Find2chSearchUrl(url);
   }
 
-  private baseUrl(): URL {
-    return new URL('http://find.2ch.sc/index.php');
-  }
-
-  private urlSearchParams(): URLSearchParams {
-    const params = new URLSearchParams();
-    params.append('STR', this.searchWord.toUrlEncode());
+  private urlSearchParams(): { [key: string]: string; } {
+    const params: { [key: string]: string; } = {};
+    params['STR'] = this.searchWord.toUrlEncode();
 
     const scendType = Find2chSearchScendType.Included;
 
     const scendTypeUrlParamString = this.scendTypeUrlParamMap.get(scendType);
     if (scendTypeUrlParamString) {
-      params.append('SCEND', 'D');
+      params['SCEND'] = 'D';
     } else {
       throw new Error(`${scendType} is not supported param.`);
     }
 
     const sortTypeUrlParamString = this.sortTypeUrlParamMap.get(this.sortType);
     if (sortTypeUrlParamString) {
-      params.append('SORT', sortTypeUrlParamString);
+      params['SORT'] = sortTypeUrlParamString;
     } else {
       throw new Error(`${this.sortType} is not supported param.`);
     }
 
     const contentTypeUrlParamString = this.contentTypeUrlParamMap.get(this.contentType);
     if (contentTypeUrlParamString) {
-      params.append('TYPE', contentTypeUrlParamString);
+      params['TYPE'] = contentTypeUrlParamString;
     } else {
       throw new Error(`${this.contentType} is not supported param.`);
     }
 
     const bbsTypeUrlParamString = this.bbsTypeUrlParamMap.get(this.bbsType);
     if (bbsTypeUrlParamString) {
-      params.append('BBS', bbsTypeUrlParamString);
+      params['BBS'] = bbsTypeUrlParamString;
     } else {
       throw new Error(`${this.bbsType} is not supported param.`);
     }

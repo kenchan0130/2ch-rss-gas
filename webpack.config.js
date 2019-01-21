@@ -5,9 +5,7 @@ module.exports = {
     mode: 'development', // disable minify for bundled file
     devtool: 'inline-source-map',
     context: __dirname,
-    entry: {
-        main: path.resolve(__dirname, 'src', 'index.ts'),
-    },
+    entry: ["@babel/polyfill", path.resolve(__dirname, 'src', 'index.ts')],
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'Code.js',
@@ -38,7 +36,9 @@ module.exports = {
                             {
                                 "targets": {
                                     "browsers": ["ie 8"]
-                                }
+                                },
+                                "loose": true,
+                                "modules": false
                             }
                         ],
                     ],
@@ -49,4 +49,4 @@ module.exports = {
     plugins: [
         new GasPlugin(),
     ],
-};
+}

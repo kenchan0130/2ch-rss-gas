@@ -7,7 +7,7 @@ import { Find2chSearchResponseDto } from './find2ch/find2chSearchResponseDto';
 
 export class DoGetResponseAdapter {
   adapt(responseDto: Find2chSearchResponseDto): GoogleAppsScript.Content.TextOutput {
-    const scriptUrl = new URL(ScriptApp.getService().getUrl());
+    const scriptUrl = ScriptApp.getService().getUrl();
     const factory = new Find2chFeedFactory(responseDto.searchWord, scriptUrl);
 
     responseDto.threadList.forEach((searchThread) => {
@@ -24,17 +24,17 @@ export class Find2chFeedFactory {
   private title: string;
   private description: string;
   private feedId: string;
-  private link: URL;
-  private feedLink: URL;
+  private link: string;
+  private feedLink: string;
   private copyright = 'All rights reserved 2019, Tadayuki Onishi';
   private _feed?: Feed;
 
-  constructor(searchWord: Find2chSearchWord, scriptUrl: URL) {
+  constructor(searchWord: Find2chSearchWord, scriptUrl: string) {
     const description = `Find2ch Search Result Feed with ${searchWord.value}`;
 
     this.title = description;
     this.description = description;
-    this.feedId = scriptUrl.toString();
+    this.feedId = scriptUrl;
     this.link = scriptUrl;
     this.feedLink = scriptUrl;
   }
@@ -48,7 +48,7 @@ export class Find2chFeedFactory {
     this.feed().addItem({
       title: itemTitle,
       id: itemId,
-      link: item.url.value.toString(),
+      link: item.url.value,
       date: item.updatedAt.value,
       description: item.highlightBody.toString(),
       guid: itemId,

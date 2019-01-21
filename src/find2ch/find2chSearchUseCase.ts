@@ -1,9 +1,6 @@
-import 'reflect-metadata';
-
-import { container } from 'tsyringe';
-
 import { Find2chClient } from './client/find2chClient';
 import { Find2chGasService } from './client/find2chGasService';
+import { Find2chGasServiceResponseAdapter } from './client/find2chGasServiceResponseAdapter';
 import { Find2chSearchSortType } from './client/find2chSearchSortType';
 import { Find2chSearchTargetBbsType } from './client/find2chSearchTargetBbsType';
 import { Find2chSearchTargetContentType } from './client/find2chSearchTargetContentType';
@@ -13,15 +10,15 @@ import { Find2chSearchThreadBoard } from './domain/find2chSearchThreadBoard';
 import { Find2chSearchRequestDto } from './find2chSearchRequestDto';
 import { Find2chSearchResponseDto } from './find2chSearchResponseDto';
 
-container.register(
-  'Find2chService', {
-    useClass: Find2chGasService,
-  },
-);
-
-const find2chClient = container.resolve(Find2chClient);
-
 export class Find2chSearchUseCase {
+  private _find2chClient: Find2chClient;
+
+  constructor() {
+    const adapter = new Find2chGasServiceResponseAdapter();
+    const find2chService = new Find2chGasService(adapter);
+    this._find2chClient = new Find2chClient(find2chService);
+  }
+
   run(requestDto: Find2chSearchRequestDto): Find2chSearchResponseDto {
     const getThreadListRequest = new GetThreadListRequest(
       requestDto.searchWord,
@@ -29,7 +26,7 @@ export class Find2chSearchUseCase {
       Find2chSearchTargetContentType.Body,
       Find2chSearchTargetBbsType.All,
     );
-    const threadListResponse = find2chClient.getThreadList(getThreadListRequest);
+    const threadListResponse = this._find2chClient.getThreadList(getThreadListRequest);
 
     const threadList = threadListResponse.resultList.map((searchResult) => {
       const board = new Find2chSearchThreadBoard(

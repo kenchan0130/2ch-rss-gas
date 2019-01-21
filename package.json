@@ -6,12 +6,13 @@
     "license": "MIT",
     "scripts": {
         "lint": "tslint -c tslint.json 'src/**/*.ts'",
-        "push": "cp appsscript.json dist/. && clasp push",
+        "push": "cp appsscript.json dist/. && clasp push -f",
         "dev": "watch 'yarn run lint && yarn run build' ./src",
         "build": "rm -rf dist/* && webpack && sed -i -e '$d' dist/Code.js && rm -r dist/Code.js-e"
     },
     "devDependencies": {
         "@babel/core": "^7.2.2",
+        "@babel/polyfill": "^7.2.5",
         "@babel/preset-env": "^7.2.3",
         "@google/clasp": "^1.7.0",
         "@types/cheerio": "^0.22.10",
@@ -26,13 +27,11 @@
         "crypto-js": "^3.1.9-1",
         "feed": "^2.0.2",
         "gas-webpack-plugin": "^1.0.1",
-        "reflect-metadata": "^0.1.13",
         "ts-copyable": "^0.1.0",
         "ts-loader": "^5.3.3",
         "tslint": "^5.12.1",
         "tslint-config-airbnb": "^5.11.1",
         "tsutils": "^3.7.0",
-        "tsyringe": "^3.0.1",
         "typescript": "^3.2.2",
         "watch": "^1.0.2",
         "webpack": "^4.28.4",
