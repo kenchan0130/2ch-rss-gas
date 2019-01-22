@@ -10,7 +10,7 @@ export class Find2chGasService implements Find2chService {
 
   getThreadList(request: GetThreadListRequest): GetThreadListResponse {
     const httpResponse = UrlFetchApp.fetch(request.url().value);
-    const rawResponse = httpResponse.getContentText('UTF-8');
+    const rawResponse = httpResponse.getContentText('EUC-JP');
     return this._responseAdapter.adapt(rawResponse);
   }
 }

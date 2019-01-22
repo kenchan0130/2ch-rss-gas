@@ -19,8 +19,10 @@ export class Find2chGasServiceResponseAdapter {
 
   private parseHtml(value: string): Find2chSearchResult[] {
     const $root = cheerio.load(value);
-    const searchResultDom = $root('dl');
-    searchResultDom.remove('dt:last-child');
+    const searchResultDom = $root('.content_pane > nbsp > dl');
+    // Remove extra dt tag
+    searchResultDom.find('dt').last().remove();
+
     const threadResultDom = searchResultDom.children();
     const threadResultDomSize = threadResultDom.length;
 
@@ -35,42 +37,46 @@ export class Find2chGasServiceResponseAdapter {
       const threadHeadlineDom = cheerio.load(threadResultDom[evenValue]).root();
       const additionalThreadInfoDom = cheerio.load(threadResultDom[evenValue + 1]).root();
 
-      const boardName = threadHeadlineDom.closest('font').find('a').text().trim();
-      const boardUrl = threadHeadlineDom.closest('font').find('a').attr('href');
+      const boardName = threadHeadlineDom.find('font > a').text().trim();
+      const boardUrl = threadHeadlineDom.find('font > a').attr('href');
 
-      const serverTypeMatch = threadHeadlineDom.closest('font').remove('a')
-        .text().trim().match(/@(.+)/);
+      // Remove tag to extract text
+      threadHeadlineDom.find('font > a').remove();
+      const includedServerTypeString = threadHeadlineDom.find('font').text().trim();
+      const serverTypeMatch = includedServerTypeString.match(/＠(.+)/);
       const serverType = () => {
         if (serverTypeMatch && serverTypeMatch[1]) {
           return serverTypeMatch[1];
         }
-        throw new Error('Cannot find server type.');
+        throw new Error(`Cannot find server type in "${includedServerTypeString}".`);
       };
 
-      const threadTitle = threadHeadlineDom.closest('a').text().trim();
-      const threadUrl = threadHeadlineDom.closest('a').attr('href');
-      const postCountMatch = threadHeadlineDom.remove('font').remove('a')
-        .text().trim().match(/\(([0-9]+)\)/);
+      const threadTitle = threadHeadlineDom.find('a').first().text().trim();
+      const threadUrl = threadHeadlineDom.find('a').first().attr('href');
+      // Remove tag to extract text
+      threadHeadlineDom.find('font, a').remove();
+      const includedPostCountString = threadHeadlineDom.text().trim();
+      const postCountMatch = includedPostCountString.match(/([0-9]+)/);
       const postCount = () => {
         if (postCountMatch && postCountMatch[1]) {
           return Number(postCountMatch[1]);
         }
-        throw new Error('Cannot find post count.');
+        throw new Error(`Cannot find post count in "${includedPostCountString}".`);
       };
 
-      const updatedAtMatch = additionalThreadInfoDom.find('.r_sec_body > font').first()
-        .text().trim().match(/.*?:(.+)/);
+      const updatedAtString = additionalThreadInfoDom.find('.r_sec_body > font').first()
+        .text().trim();
+      const updatedAtMatch = updatedAtString.match(/.*?:(.+)/);
       const updatedAt = () => {
         if (updatedAtMatch && updatedAtMatch[1]) {
           return new Date(updatedAtMatch[1]);
         }
-        throw new Error('Cannot find updated time.');
+        throw new Error(`Cannot find updated time in "${updatedAtString}".`);
       };
 
       const highlightBody = () => {
-        const body = additionalThreadInfoDom.find('.r_sec_body')
-        .remove('a').remove('font')
-        .text().trim().replace(/^…/, '').trim();
+        additionalThreadInfoDom.find('.r_sec_body > font, .r_sec_body > a').remove();
+        const body = additionalThreadInfoDom.text().trim().replace(/^…/, '').trim();
         return body.length === 0 ? null : body;
       };
 
