@@ -2,7 +2,7 @@ const path = require('path');
 const GasPlugin = require('gas-webpack-plugin');
 
 module.exports = {
-    mode: 'development', // disable minify for bundled file
+    mode: 'none', // disable minify for bundled file
     devtool: 'inline-source-map',
     context: __dirname,
     entry: ["@babel/polyfill", path.resolve(__dirname, 'src', 'index.ts')],
