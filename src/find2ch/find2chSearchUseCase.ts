@@ -1,5 +1,6 @@
 import { Find2chClient } from './client/find2chClient';
 import { Find2chGasService } from './client/find2chGasService';
+import { Find2chGasServiceRequestAdapter } from './client/find2chGasServiceRequestAdapter';
 import { Find2chGasServiceResponseAdapter } from './client/find2chGasServiceResponseAdapter';
 import { Find2chSearchSortType } from './client/find2chSearchSortType';
 import { Find2chSearchTargetBbsType } from './client/find2chSearchTargetBbsType';
@@ -14,8 +15,9 @@ export class Find2chSearchUseCase {
   private _find2chClient: Find2chClient;
 
   constructor() {
-    const adapter = new Find2chGasServiceResponseAdapter();
-    const find2chService = new Find2chGasService(adapter);
+    const requestAdapter = new Find2chGasServiceRequestAdapter();
+    const responseAdapter = new Find2chGasServiceResponseAdapter();
+    const find2chService = new Find2chGasService(requestAdapter, responseAdapter);
     this._find2chClient = new Find2chClient(find2chService);
   }
 

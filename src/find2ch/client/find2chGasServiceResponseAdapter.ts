@@ -12,8 +12,8 @@ import { Find2chSearchResult } from './find2chSearchResult';
 import { GetThreadListResponse } from './getThreadListResponse';
 
 export class Find2chGasServiceResponseAdapter {
-  adapt(value: string): GetThreadListResponse {
-    const resultList = this.parseHtml(value);
+  adapt(value: GoogleAppsScript.URL_Fetch.HTTPResponse): GetThreadListResponse {
+    const resultList = this.parseHtml(value.getContentText('EUC-JP'));
     return new GetThreadListResponse(resultList);
   }
 
