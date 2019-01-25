@@ -675,6 +675,13 @@
   resolved "https://registry.yarnpkg.com/@types/crypto-js/-/crypto-js-3.1.43.tgz#b859347d6289ba13e347c335a4c9efa63337a748"
   integrity sha512-EHe/YKctU3IYNBsDmSOPX/7jLHPRlx8WaiDKSY9JCTnJ8XJeM4c0ZJvx+9Gxmr2s2ihI92R+3U/gNL1sq5oRuQ==
 
+"@types/encoding-japanese@^1.0.15":
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/@types/encoding-japanese/-/encoding-japanese-1.0.15.tgz#5df7c9c6965255a8aa10a7435eba75384fd0df09"
+  integrity sha1-XffJxpZSVaiqEKdDXrp1OE/Q3wk=
+  dependencies:
+    "@types/node" "*"
+
 "@types/google-apps-script@^0.0.35":
   version "0.0.35"
   resolved "https://registry.yarnpkg.com/@types/google-apps-script/-/google-apps-script-0.0.35.tgz#269b487f5ad0a3d94e0685ec7f5033723864f039"
@@ -1917,6 +1924,11 @@ encodeurl@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
+
+encoding-japanese@^1.0.29:
+  version "1.0.29"
+  resolved "https://registry.yarnpkg.com/encoding-japanese/-/encoding-japanese-1.0.29.tgz#f66db17f2afaadf9a38b6b0227c0c877d2f2c5b1"
+  integrity sha1-9m2xfyr6rfmji2sCJ8DId9LyxbE=
 
 end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   version "1.4.1"
@@ -5052,6 +5064,14 @@ ucfirst@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/ucfirst/-/ucfirst-1.0.0.tgz#4e105b6448d05e264ecec435e0b919363c5f2f2f"
   integrity sha1-ThBbZEjQXiZOzsQ14LkZNjxfLy8=
+
+uglify-js@^3.4.9:
+  version "3.4.9"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.4.9.tgz#af02f180c1207d76432e473ed24a28f4a782bae3"
+  integrity sha512-8CJsbKOtEbnJsTyv6LE6m6ZKniqMiFWmm9sRbopbkGs3gMPPfd3Fh8iIA4Ykv5MgaTbqHr4BaoGLJLZNhsrW1Q==
+  dependencies:
+    commander "~2.17.1"
+    source-map "~0.6.1"
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"

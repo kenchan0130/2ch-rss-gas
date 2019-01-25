@@ -8,7 +8,7 @@
         "lint": "tslint -c tslint.json 'src/**/*.ts'",
         "push": "cp appsscript.json dist/. && clasp push -f",
         "dev": "watch 'yarn run lint && yarn run build' ./src",
-        "build": "rm -rf dist/* && webpack && sed -i -e '$d' dist/Code.js && rm -r dist/Code.js-e"
+        "build": "rm -rf dist/* && webpack && uglifyjs --compress --mangle --ie8 --keep-fnames --output dist/Code.js -- dist/Code.js && echo \"\\n/** `shasum -a 256 dist/Code.js` **/\" >> dist/Code.js"
     },
     "devDependencies": {
         "@babel/core": "^7.2.2",
@@ -29,6 +29,7 @@
         "tslint-config-airbnb": "^5.11.1",
         "tsutils": "^3.7.0",
         "typescript": "^3.2.2",
+        "uglify-js": "^3.4.9",
         "watch": "^1.0.2",
         "webpack": "^4.28.4",
         "webpack-cli": "^3.2.1"
