@@ -34,7 +34,7 @@ class Find2chFeedFactory {
   }
 
   addItem(searchThread: Find2chSearchThread): void {
-    const itemId = `${searchThread.url.value}_${searchThread.updatedAt.value.toString()}`;
+    const itemId = searchThread.url.value;
     const itemTitle = `${searchThread.title.value}: ${searchThread.postCount.value} response`;
     const feedItem = new FeedItem(
       itemTitle,
