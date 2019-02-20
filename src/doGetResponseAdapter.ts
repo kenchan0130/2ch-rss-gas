@@ -38,7 +38,7 @@ class Find2chFeedFactory {
     const itemTitle = `${searchThread.title.value}: ${searchThread.postCount.value} response`;
     const feedItem = new FeedItem(
       itemTitle,
-      searchThread.url.anchorLinkUrl(),
+      searchThread.url.value,
       searchThread.highlightBody.toString(),
       searchThread.updatedAt.value,
       itemId,
