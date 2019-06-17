@@ -28,19 +28,7 @@ module.exports = {
                 loader: 'babel-loader',
                 options: {
                     presets: [
-                        [
-                            'gas'
-                        ],
-                        [
-                            "@babel/preset-env",
-                            {
-                                "targets": {
-                                    "browsers": ["ie 8"]
-                                },
-                                "loose": true,
-                                "modules": false
-                            }
-                        ],
+                        '@kenchan0130/babel-preset-google-apps-script'
                     ],
                 }
             }
