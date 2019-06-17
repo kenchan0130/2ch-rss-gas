@@ -32,8 +32,7 @@ export class CacheStoreClient {
     var all = this._selectAll();
     var insertingObject = new CacheStoreObject(insertingValue, new Date());
     var canInsert = all.filter((value) => {
-      // board name and thread title as id
-      return value.content.boardUrl.value === insertingObject.content.boardUrl.value && value.content.threadTitle.value === insertingObject.content.boardUrl.value;
+      return insertingObject.isSameObject(value);
     }).length === 0;
     
     if (canInsert) {
@@ -45,20 +44,7 @@ export class CacheStoreClient {
 
       const storeValue = JSON.stringify(
         sortedAll.map((value) => {  
-          const content = value.content;
-          return { 
-            insertedAt: value.insertedAt,
-            content: {
-              boardName: content.boardName.value,
-              boardUrl: content.boardUrl.value,
-              highlightBody: content.highlightBody.value,
-              postCount: content.postCount.value,
-              serverType: content.serverType.value,
-              threadTitle: content.threadTitle.value,
-              threadUrl: content.threadUrl.value,
-              updatedAt: content.updatedAt.value,
-            }
-          }; 
+          return this._serializeStoreObject(value);
         })
       );
       this.cache.put(this.cacheKey, storeValue);
@@ -67,17 +53,38 @@ export class CacheStoreClient {
 
   _selectAll(): CacheStoreObject[] {
     return JSON.parse(this.cache.get(this.cacheKey) || '[]').map((value: any) => {
-      const result = new Find2chSearchResult(
-        new Find2chSearchThreadTitle(value.content.threadTitle),
-        new Find2chSearchThreadUrl(value.content.threadUrl),
-        new Find2chSearchThreadPostCount(value.content.postCount),
-        new Find2chSearchThreadBoardName(value.content.boardName),
-        new Find2chSearchThreadBoardUrl(value.content.boardUrl),
-        new Find2chSearchThreadUpdatedAt(new Date(value.content.updatedAt)),
-        new Find2chSearchThreadBoardServerType(value.content.serverType),
-        new Find2chSearchThreadhHighlightBody(value.content.highlightBody),
-      );
-      return new CacheStoreObject(result, new Date(value.insertedAt));
+      return this._deserializeStoreObject(value)
     });
+  }
+
+  _serializeStoreObject(value: CacheStoreObject): any {
+    const content = value.content;
+    return {
+      insertedAt: value.insertedAt,
+      content: {
+        boardName: content.boardName.value,
+        boardUrl: content.boardUrl.value,
+        highlightBody: content.highlightBody.value,
+        postCount: content.postCount.value,
+        serverType: content.serverType.value,
+        threadTitle: content.threadTitle.value,
+        threadUrl: content.threadUrl.value,
+        updatedAt: content.updatedAt.value,
+      }
+    };
+  }
+  
+  _deserializeStoreObject(value: any): CacheStoreObject {
+    const result = new Find2chSearchResult(
+      new Find2chSearchThreadTitle(value.content.threadTitle),
+      new Find2chSearchThreadUrl(value.content.threadUrl),
+      new Find2chSearchThreadPostCount(value.content.postCount),
+      new Find2chSearchThreadBoardName(value.content.boardName),
+      new Find2chSearchThreadBoardUrl(value.content.boardUrl),
+      new Find2chSearchThreadUpdatedAt(new Date(value.content.updatedAt)),
+      new Find2chSearchThreadBoardServerType(value.content.serverType),
+      new Find2chSearchThreadhHighlightBody(value.content.highlightBody),
+    );
+    return new CacheStoreObject(result, new Date(value.insertedAt));
   }
 }

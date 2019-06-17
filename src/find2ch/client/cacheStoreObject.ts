@@ -8,4 +8,8 @@ export class CacheStoreObject {
     this.content = content;
     this.insertedAt = 'string' === typeof insertedAt ? new Date(insertedAt) : insertedAt;
   }
+
+  isSameObject(value: CacheStoreObject): boolean {
+    return value.content.boardUrl.value === this.content.boardUrl.value && value.content.threadTitle.value === this.content.boardUrl.value;
+  }
 }
