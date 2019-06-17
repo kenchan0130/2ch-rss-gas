@@ -17,7 +17,7 @@ export class CacheStoreClient {
   constructor(cacheKey: string) {
     this.cacheKey = cacheKey;
     this.cache = CacheService.getScriptCache();
-    this.saveItemUpper = 20;
+    this.saveItemUpper = 50;
   }
 
   selectAllSortByInsertDateDesc(): Find2chSearchResult[] {
