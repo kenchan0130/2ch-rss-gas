@@ -1,3 +1,4 @@
+import { CacheStoreClient } from './client/cacheStoreClient';
 import { Find2chClient } from './client/find2chClient';
 import { Find2chGasService } from './client/find2chGasService';
 import { Find2chGasServiceRequestAdapter } from './client/find2chGasServiceRequestAdapter';
@@ -30,7 +31,12 @@ export class Find2chSearchUseCase {
     );
     const threadListResponse = this._find2chClient.getThreadList(getThreadListRequest);
 
-    const threadList = threadListResponse.resultList.map((searchResult) => {
+    const cacheQueueClient = new CacheStoreClient('2ch-rss-gas');
+    threadListResponse.resultList.forEach((value) => {
+      cacheQueueClient.pushOut(value);
+    });
+
+    const threadList = cacheQueueClient.selectAllSortByInsertDateDesc().map((searchResult) => {
       const board = new Find2chSearchThreadBoard(
         searchResult.boardName,
         searchResult.boardUrl,
