@@ -7,7 +7,7 @@ export class Find2chSearchThreadUrl extends Copyable<Find2chSearchThreadUrl> {
     super(Find2chSearchThreadUrl);
   }
 
-  anchorLinkUrl(): string {
+  adjustedUrl(): string {
     const urlMatch = this.value.match(/((.+\/(\w+\/[0-9]+))\/([0-9]+))-$/);
     return (() => {
       if (!urlMatch) {
@@ -16,8 +16,12 @@ export class Find2chSearchThreadUrl extends Copyable<Find2chSearchThreadUrl> {
 
       const boradUrl = urlMatch[2];
       const boradId = urlMatch[3];
-      const threadId = urlMatch[4];
-      return `${boradUrl}#${boradId}/${threadId}`;
+      const threadId = parseInt(urlMatch[4]);
+      const threadIdTrencheSize = 10
+
+      const threadIdTrenche = (threadId - threadIdTrencheSize) > 0 ? threadId - threadIdTrencheSize : threadId;
+
+      return `${boradUrl}#${boradId}/${threadIdTrenche}-`;
     })();
   }
 }
