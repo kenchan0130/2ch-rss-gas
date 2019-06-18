@@ -31,7 +31,10 @@ export class Find2chSearchUseCase {
     );
     const threadListResponse = this._find2chClient.getThreadList(getThreadListRequest);
 
-    const cacheQueueClient = new CacheStoreClient('2ch-rss-gas');
+    const cacheQueueClient = new CacheStoreClient(`2ch-rss-gas-${requestDto.searchWord.value}`);
+    if (requestDto.clearCache.value) {
+      cacheQueueClient.clearStore();
+    }
     threadListResponse.resultList.forEach((value) => {
       cacheQueueClient.pushOut(value);
     });

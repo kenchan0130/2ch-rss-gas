@@ -5,7 +5,7 @@ import { Find2chSearchWord } from './find2ch/domain/find2chSearchWord';
 import { Find2chSearchResponseDto } from './find2ch/find2chSearchResponseDto';
 
 export class DoGetResponseAdapter {
-  adapt(responseDto: Find2chSearchResponseDto): GoogleAppsScript.Content.TextOutput {
+  adapt(responseDto: Find2chSearchResponseDto): string {
     const scriptUrl = ScriptApp.getService().getUrl();
     const factory = new Find2chFeedFactory(responseDto.searchWord, scriptUrl);
 
@@ -13,9 +13,7 @@ export class DoGetResponseAdapter {
       factory.addItem(searchThread);
     });
 
-    return ContentService.createTextOutput(
-      factory.generateFeedString(),
-    ).setMimeType(ContentService.MimeType.RSS);
+    return factory.generateFeedString();
   }
 }
 
@@ -35,7 +33,7 @@ class Find2chFeedFactory {
 
   addItem(searchThread: Find2chSearchThread): void {
     const itemId = searchThread.url.value;
-    const itemTitle = `${searchThread.title.value}: ${searchThread.postCount.value} response`;
+    const itemTitle = searchThread.title.value;
     const feedItem = new FeedItem(
       itemTitle,
       searchThread.url.value,

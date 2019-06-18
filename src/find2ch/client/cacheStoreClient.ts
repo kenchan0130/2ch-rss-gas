@@ -7,7 +7,7 @@ import { Find2chSearchThreadTitle } from '../domain/find2chSearchThreadTitle';
 import { Find2chSearchThreadUpdatedAt } from '../domain/find2chSearchThreadUpdatedAt';
 import { Find2chSearchThreadUrl } from '../domain/find2chSearchThreadUrl';
 import { CacheStoreObject } from './cacheStoreObject';
-import { Find2chSearchResult } from './Find2chSearchResult';
+import { Find2chSearchResult } from './find2chSearchResult';
 
 export class CacheStoreClient {
   private cacheKey: string;
@@ -51,9 +51,13 @@ export class CacheStoreClient {
     }
   };
 
+  clearStore() {
+    this.cache.remove(this.cacheKey);
+  }
+
   _selectAll(): CacheStoreObject[] {
     return JSON.parse(this.cache.get(this.cacheKey) || '[]').map((value: any) => {
-      return this._deserializeStoreObject(value)
+      return this._deserializeStoreObject(value);
     });
   }
 

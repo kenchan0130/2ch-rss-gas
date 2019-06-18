@@ -1,4 +1,4 @@
-import { Find2chSearchResult } from './Find2chSearchResult';
+import { Find2chSearchResult } from './find2chSearchResult';
 
 export class CacheStoreObject {
   content: Find2chSearchResult
@@ -10,6 +10,6 @@ export class CacheStoreObject {
   }
 
   isSameObject(value: CacheStoreObject): boolean {
-    return value.content.boardUrl.value === this.content.boardUrl.value && value.content.threadTitle.value === this.content.boardUrl.value;
+    return value.content.threadUrl.value === this.content.threadUrl.value;
   }
 }
