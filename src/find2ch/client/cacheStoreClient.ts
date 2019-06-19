@@ -12,12 +12,14 @@ import { Find2chSearchResult } from './find2chSearchResult';
 export class CacheStoreClient {
   private cacheKey: string;
   private cache: GoogleAppsScript.Cache.Cache;
-  private saveItemUpper: number 
+  private saveItemUpper: number ;
+  private maxCacheTimeSec: number;
 
-  constructor(cacheKey: string) {
+  constructor(cacheKey: string, saveItemUpper: number) {
     this.cacheKey = cacheKey;
     this.cache = CacheService.getScriptCache();
-    this.saveItemUpper = 50;
+    this.saveItemUpper = saveItemUpper;
+    this.maxCacheTimeSec = 21600;
   }
 
   selectAllSortByInsertDateDesc(): Find2chSearchResult[] {
@@ -47,12 +49,23 @@ export class CacheStoreClient {
           return this._serializeStoreObject(value);
         })
       );
-      this.cache.put(this.cacheKey, storeValue);
+      this._save(storeValue);
     }
   };
 
   clearStore() {
     this.cache.remove(this.cacheKey);
+  }
+
+  extentionStorePeriod() {
+    const content = this.cache.get(this.cacheKey);
+    if (content) {
+      this._save(content);
+    }
+  }
+
+  _save(storeValue: string) {
+    this.cache.put(this.cacheKey, storeValue, this.maxCacheTimeSec);
   }
 
   _selectAll(): CacheStoreObject[] {
