@@ -31,17 +31,19 @@ export class Find2chSearchUseCase {
     );
     const threadListResponse = this._find2chClient.getThreadList(getThreadListRequest);
 
-    const cacheQueueClient = new CacheStoreClient(`2ch-rss-gas-${requestDto.searchWord.value}`, requestDto.find2chRssItemSize.value);
+    const cacheQueueClient = new CacheStoreClient(`2ch-rss-gas-${requestDto.searchWord.value}`);
     if (requestDto.clearCache.value) {
       cacheQueueClient.clearStore();
     }
     // Extention store period, GAS default max time is 6 hours.
     cacheQueueClient.extentionStorePeriod();
-    threadListResponse.resultList.forEach((value) => {
+    threadListResponse.resultList.sort((a, b) => {
+      return a.updatedAt.value < b.updatedAt.value ? 1 : -1;
+    }).forEach((value) => {
       cacheQueueClient.pushOut(value);
     });
 
-    const threadList = cacheQueueClient.selectAllSortByInsertDateDesc().map((searchResult) => {
+    const threadList = cacheQueueClient.selectAllSortByInsertDateDesc(requestDto.find2chRssItemSize.value).map((searchResult) => {
       const board = new Find2chSearchThreadBoard(
         searchResult.boardName,
         searchResult.boardUrl,

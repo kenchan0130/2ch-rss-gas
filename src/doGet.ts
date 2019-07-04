@@ -48,8 +48,8 @@ export function doGet(event: GetEvent): GoogleAppsScript.Content.TextOutput {
 
   const responseRssText = doGetResponseAdapter.adapt(responseDto);
 
-  // 30分 RSS をキャッシュ
-  cache.put(cacheKey, responseRssText, 60*30);
+  // 1時間 RSS をキャッシュ
+  cache.put(cacheKey, responseRssText, 60*60);
   
   return ContentService.createTextOutput(responseRssText).setMimeType(ContentService.MimeType.RSS)
 }

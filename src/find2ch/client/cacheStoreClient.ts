@@ -15,17 +15,18 @@ export class CacheStoreClient {
   private saveItemUpper: number ;
   private maxCacheTimeSec: number;
 
-  constructor(cacheKey: string, saveItemUpper: number) {
+  constructor(cacheKey: string) {
     this.cacheKey = cacheKey;
     this.cache = CacheService.getScriptCache();
-    this.saveItemUpper = saveItemUpper;
+    // 500 items are buffer sufficient for store size
+    this.saveItemUpper = 500;
     this.maxCacheTimeSec = 21600;
   }
 
-  selectAllSortByInsertDateDesc(): Find2chSearchResult[] {
+  selectAllSortByInsertDateDesc(limit: number): Find2chSearchResult[] {
     return this._selectAll().sort((a, b) => { 
-      return a.insertedAt < b.insertedAt ? 1 : -1;
-    }).map((value) => {
+      return a.insertedAt > b.insertedAt ? 1 : -1;
+    }).slice(0, limit).map((value) => {
       return value.content;
     });
   };
